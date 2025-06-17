@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miasta - World Database API</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            color: #333;
+            border-bottom: 2px solid #17a2b8;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+        }
+        .search-box input, .search-box select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            color: black;
+        }
+        .btn:hover {
+            opacity: 0.8;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            border: 1px solid #f5c6cb;
+        }
+        .cities-container {
+            overflow-x: auto;
+        }
+        .cities-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .cities-table th,
+        .cities-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .cities-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .cities-table tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+        .city-name {
+            font-weight: bold;
+            color: #17a2b8;
+        }
+        .country-code {
+            background-color: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .population {
+            text-align: right;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #17a2b8;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+        }
+        .filter-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border: 1px solid #bee5eb;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .page-btn:hover {
+            background: #f8f9fa;
+        }
+        .page-btn.active {
+            background: #17a2b8;
+            color: white;
+            border-color: #17a2b8;
+        }
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏙️ Zarządzanie Miastami</h1>
+            <p>Przeglądaj miasta z całego świata</p>
+        </div>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Szukaj miasta...">
+            </div>
+            <div class="search-box">
+                <select id="countryFilter">
+                    <option value="">Wszystkie kraje</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="loadCities()">🔄 Odśwież</button>
+            <button class="btn btn-warning" onclick="clearFilters()">🔄 Wyczyść filtry</button>
+            <a href="countries.html" class="btn btn-info">🌍 Kraje</a>
+            <a href="index.php" class="btn btn-info">🏠 Główna</a>
+        </div>
+
+        <div id="filterInfo" class="filter-info" style="display: none;"></div>
+
+        <div class="stats" id="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalCities">-</div>
+                <div class="stat-label">Miast</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalPopulation">-</div>
+                <div class="stat-label">Ludność (mln)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="avgPopulation">-</div>
+                <div class="stat-label">Śr. Ludność</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="countriesCount">-</div>
+                <div class="stat-label">Krajów</div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">Ładowanie miast...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div class="cities-container">
+            <table class="cities-table" id="citiesTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Nazwa Miasta 🔄</th>
+                        <th onclick="sortTable(1)">Kraj 🔄</th>
+                        <th onclick="sortTable(2)">Region 🔄</th>
+                        <th onclick="sortTable(3)" style="text-align: right;">Ludność 🔄</th>
+                    </tr>
+                </thead>
+                <tbody id="citiesTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination" id="pagination" style="display: none;"></div>
+    </div>
+
+    <script>
+        let allCities = [];
+        let filteredCities = [];
+        let currentPage = 1;
+        let citiesPerPage = 50;
+        let sortColumn = 3; // Domyślnie sortuj po ludności
+        let sortDirection = 'desc';
+
+        // Ładowanie miast przy starcie
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sprawdź czy jest parametr kraju w URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const countryCode = urlParams.get('country');
+            
+            loadCities(countryCode);
+            loadCountriesForFilter();
+            
+            // Wyszukiwanie
+            document.getElementById('searchInput').addEventListener('input', function() {
+                filterCities();
+            });
+            
+            // Filtr kraju
+            document.getElementById('countryFilter').addEventListener('change', function() {
+                filterCities();
+            });
+
+            // Ustaw filtr kraju jeśli jest w URL
+            if (countryCode) {
+                document.getElementById('countryFilter').value = countryCode;
+            }
+        });
+
+        async function loadCities(countryCode = null) {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const table = document.getElementById('citiesTable');
+            
+            loading.style.display = 'block';
+            error.style.display = 'none';
+            table.style.display = 'none';
+
+            try {
+                let url = '/api/read_cities.php';
+                if (countryCode) {
+                    url += `?country=${countryCode}`;
+                }
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (response.ok && data.records) {
+                    allCities = data.records;
+                    filteredCities = [...allCities];
+                    
+                    updateFilterInfo(countryCode);
+                    sortCities();
+                    updateStats();
+                    displayCities();
+                    table.style.display = 'table';
+                } else {
+                    throw new Error(data.message || 'Błąd ładowania miast');
+                }
+            } catch (err) {
+                error.textContent = 'Błąd: ' + err.message;
+                error.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        async function loadCountriesForFilter() {
+            try {
+                const response = await fetch('/api/read_countries.php');
+                const data = await response.json();
+                
+                if (response.ok && data.records) {
+                    const select = document.getElementById('countryFilter');
+                    const currentValue = select.value;
+                    
+                    select.innerHTML = '<option value="">Wszystkie kraje</option>';
+                    
+                    data.records
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .forEach(country => {
+                            const option = document.createElement('option');
+                            option.value = country.code;
+                            option.textContent = `${country.name} (${country.code})`;
+                            select.appendChild(option);
+                        });
+                    
+                    select.value = currentValue;
+                }
+            } catch (err) {
+                console.error('Błąd ładowania krajów:', err);
+            }
+        }
+
+        function filterCities() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const countryFilter = document.getElementById('countryFilter').value;
+            
+            filteredCities = allCities.filter(city => {
+                const matchesSearch = !searchTerm || 
+                    city.name.toLowerCase().includes(searchTerm) ||
+                    city.district.toLowerCase().includes(searchTerm);
+                
+                const matchesCountry = !countryFilter || 
+                    city.country_code === countryFilter;
+                
+                return matchesSearch && matchesCountry;
+            });
+            
+            currentPage = 1;
+            sortCities();
+            updateStats();
+            displayCities();
+            updateFilterInfo();
+        }
+
+        function sortCities() {
+            filteredCities.sort((a, b) => {
+                let aVal, bVal;
+                
+                switch(sortColumn) {
+                    case 0: // Nazwa
+                        aVal = a.name.toLowerCase();
+                        bVal = b.name.toLowerCase();
+                        break;
+                    case 1: // Kraj
+                        aVal = a.country_code;
+                        bVal = b.country_code;
+                        break;
+                    case 2: // Region
+                        aVal = a.district.toLowerCase();
+                        bVal = b.district.toLowerCase();
+                        break;
+                    case 3: // Ludność
+                        aVal = parseInt(a.population);
+                        bVal = parseInt(b.population);
+                        break;
+                    default:
+                        return 0;
+                }
+                
+                if (sortDirection === 'asc') {
+                    return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+                } else {
+                    return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
+                }
+            });
+        }
+
+        function sortTable(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = column === 3 ? 'desc' : 'asc'; // Ludność domyślnie malejąco
+            }
+            
+            sortCities();
+            displayCities();
+        }
+
+        function displayCities() {
+            const tbody = document.getElementById('citiesTableBody');
+            const pagination = document.getElementById('pagination');
+            
+            // Paginacja
+            const totalPages = Math.ceil(filteredCities.length / citiesPerPage);
+            const startIndex = (currentPage - 1) * citiesPerPage;
+            const endIndex = startIndex + citiesPerPage;
+            const citiesToShow = filteredCities.slice(startIndex, endIndex);
+            
+            if (citiesToShow.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px;">Nie znaleziono miast</td></tr>';
+                pagination.style.display = 'none';
+                return;
+            }
+
+            tbody.innerHTML = citiesToShow.map(city => `
+                <tr>
+                    <td class="city-name">${city.name}</td>
+                    <td><span class="country-code">${city.country_code}</span></td>
+                    <td>${city.district}</td>
+                    <td class="population">${formatNumber(city.population)}</td>
+                </tr>
+            `).join('');
+
+            // Aktualizuj paginację
+            if (totalPages > 1) {
+                updatePagination(totalPages);
+                pagination.style.display = 'flex';
+            } else {
+                pagination.style.display = 'none';
+            }
+        }
+
+        function updatePagination(totalPages) {
+            const pagination = document.getElementById('pagination');
+            let paginationHTML = '';
+            
+            // Przycisk poprzedni
+            paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>← Poprzedni</button>`;
+            
+            // Numery stron
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+            
+            // Przycisk następny
+            paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Następny →</button>`;
+            
+            pagination.innerHTML = paginationHTML;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredCities.length / citiesPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                displayCities();
+            }
+        }
+
+        function updateStats() {
+            const totalCities = filteredCities.length;
+            const totalPopulation = filteredCities.reduce((sum, city) => sum + parseInt(city.population || 0), 0);
+            const avgPopulation = totalCities > 0 ? totalPopulation / totalCities : 0;
+            const uniqueCountries = new Set(filteredCities.map(city => city.country_code)).size;
+
+            document.getElementById('totalCities').textContent = formatNumber(totalCities);
+            document.getElementById('totalPopulation').textContent = Math.round(totalPopulation / 1000000);
+            document.getElementById('avgPopulation').textContent = formatNumber(Math.round(avgPopulation));
+            document.getElementById('countriesCount').textContent = uniqueCountries;
+        }
+
+        function updateFilterInfo(countryCode = null) {
+            const filterInfo = document.getElementById('filterInfo');
+            const searchTerm = document.getElementById('searchInput').value;
+            const selectedCountry = document.getElementById('countryFilter');
+            const selectedCountryText = selectedCountry.options[selectedCountry.selectedIndex]?.text;
+            
+            let infoText = '';
+            const hasFilters = searchTerm || selectedCountry.value || countryCode;
+            
+            if (hasFilters) {
+                infoText = 'Aktywne filtry: ';
+                const filters = [];
+                
+                if (searchTerm) filters.push(`wyszukiwanie: "${searchTerm}"`);
+                if (selectedCountry.value || countryCode) {
+                    filters.push(`kraj: ${selectedCountryText || countryCode}`);
+                }
+                
+                infoText += filters.join(', ');
+                infoText += ` | Wyniki: ${filteredCities.length} z ${allCities.length} miast`;
+                
+                filterInfo.textContent = infoText;
+                filterInfo.style.display = 'block';
+            } else {
+                filterInfo.style.display = 'none';
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('countryFilter').value = '';
+            
+            // Usuń parametr country z URL
+            const url = new URL(window.location);
+            url.searchParams.delete('country');
+            window.history.replaceState({}, '', url);
+            
+            filterCities();
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat('pl-PL').format(num);
+        }
+    </script>
+</body>
+</html>

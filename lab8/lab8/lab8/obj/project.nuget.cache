@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "dgSpecHash": "hbNGrn9C0Zw=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\emist\\Downloads\\lab8\\lab8\\lab8\\lab8.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\emist\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\9.0.0-preview.4.24267.6\\microsoft.aspnetcore.authentication.jwtbearer.9.0.0-preview.4.24267.6.nupkg.sha512",
+    "C:\\Users\\emist\\.nuget\\packages\\microsoft.identitymodel.abstractions\\7.4.1\\microsoft.identitymodel.abstractions.7.4.1.nupkg.sha512",
+    "C:\\Users\\emist\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\7.4.1\\microsoft.identitymodel.jsonwebtokens.7.4.1.nupkg.sha512",
+    "C:\\Users\\emist\\.nuget\\packages\\microsoft.identitymodel.logging\\7.4.1\\microsoft.identitymodel.logging.7.4.1.nupkg.sha512",
+    "C:\\Users\\emist\\.nuget\\packages\\microsoft.identitymodel.protocols\\7.4.1\\microsoft.identitymodel.protocols.7.4.1.nupkg.sha512",
+    "C:\\Users\\emist\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\7.4.1\\microsoft.identitymodel.protocols.openidconnect.7.4.1.nupkg.sha512",
+    "C:\\Users\\emist\\.nuget\\packages\\microsoft.identitymodel.tokens\\7.4.1\\microsoft.identitymodel.tokens.7.4.1.nupkg.sha512",
+    "C:\\Users\\emist\\.nuget\\packages\\system.identitymodel.tokens.jwt\\7.4.1\\system.identitymodel.tokens.jwt.7.4.1.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Wersja lab8 jest zależna od Microsoft.AspNetCore.Authentication.JwtBearer (>= 9.0.0-preview.4.24263.9), ale nie znaleziono Microsoft.AspNetCore.Authentication.JwtBearer 9.0.0-preview.4.24263.9. Zamiast tego rozwiązano Microsoft.AspNetCore.Authentication.JwtBearer 9.0.0-preview.4.24267.6.",
+      "libraryId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    }
+  ]
+}

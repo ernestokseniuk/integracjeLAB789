@@ -1,0 +1,198 @@
+8.3.3
+Step 1: Get an Authentication Token
+Open Postman and create a new POST request
+Set the URL to: http://localhost:8080/api/users/authenticate
+Go to the "Headers" tab and add:
+Key: Content-Type
+Value: application/json
+Go to the "Body" tab, select "raw" and choose "JSON" from the dropdown
+Enter the following JSON in the request body:
+{
+  "Username": "Andrzej",
+  "Password": "Andrzej"
+}
+Click "Send"
+You should receive a response like this:
+{
+  "id": 1,
+  "username": "Andrzej",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+Copy the token value from the response (without the quotes)
+
+Step 2: Access Protected Resource with Token
+Create a new GET request in Postman
+Set the URL to: http://localhost:8080/api/users
+Go to the "Headers" tab and add:
+Key: Authorization
+Value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (paste your token after "Bearer ")
+Click "Send"
+You should receive a successful response (HTTP 200) with a list of all users:
+[
+  {
+    "id": 1,
+    "username": "Andrzej",
+    "roles": [
+      {"role_": "admin"},
+      {"role_": "user"}
+    ]
+  },
+  {
+    "id": 2,
+    "username": "Piotrek",
+    "roles": [
+      {"role_": "number"},
+      {"role_": "user"}
+    ]
+  },
+  {
+    "id": 3,
+    "username": "Ania",
+    "roles": [
+      {"role_": "user"}
+    ]
+  }
+]
+
+Step 3: Test Access Without Token
+Create another GET request in Postman (or use the same one and remove the Authorization header)
+Set the URL to: http://localhost:8080/api/users
+Make sure there is no Authorization header
+Click "Send"
+You should receive an error (HTTP 401 Unauthorized) with a response like:
+{
+  "type": "https://tools.ietf.org/html/rfc7235#section-3.1",
+  "title": "Unauthorized",
+  "status": 401,
+  "traceId": "..."
+}
+
+This confirms that the authentication mechanism is working correctly - the endpoint can only be accessed with a valid JWT token.
+
+
+
+
+
+8.42
+Step 1: Test with Admin User (Success Case)
+Open Postman and create a new POST request
+Set the URL to: http://localhost:8080/api/users/authenticate
+Add header Content-Type: application/json
+In the request body, use:
+{
+  "Username": "Andrzej",
+  "Password": "Andrzej"
+}
+Send the request and copy the token from the response
+Create a new GET request to http://localhost:8080/api/users
+Add header Authorization: Bearer your-token-from-step-5
+Send the request
+You should receive a HTTP 200 OK with the list of all users
+This confirms the user with "admin" role can access the protected resource
+
+Step 2: Test with Non-Admin User (Failure Case - Piotrek)
+Create a new POST request to http://localhost:8080/api/users/authenticate
+Add header Content-Type: application/json
+In the request body, use:
+{
+  "Username": "Piotrek",
+  "Password": "Piotrek"
+}
+Send the request and copy the token from the response
+Create a new GET request to http://localhost:8080/api/users
+Add header Authorization: Bearer your-token-from-step-4
+Send the request
+You should receive a HTTP 403 Forbidden response
+This confirms that a user with valid credentials but without the "admin" role cannot access the resource
+
+Step 4: Test without Token (Unauthorized Case)
+Create a new GET request to http://localhost:8080/api/users
+Don't add any Authorization header
+Send the request
+You should receive a HTTP 401 Unauthorized response
+This confirms that authentication is required before authorization is even checked
+
+8.4.5
+Step 1: Test the User Count Endpoint (user role)
+
+1. Get a token for a user with the "user" role (any user has this role)
+   - Make a POST request to http://localhost:8080/api/users/authenticate
+   - Body: {"Username": "Andrzej", "Password": "Andrzej"}
+   - Copy the token from the response
+
+2. Access the user count endpoint
+   - Make a GET request to http://localhost:8080/api/users/count
+   - Add header: Authorization: Bearer your-token
+   - You should receive a HTTP 200 OK with the count of users
+
+3. Verify that all users can access this endpoint
+   - Repeat steps 1-2 with "Piotrek" and "Ania" credentials
+   - They should all succeed because they all have the "user" role
+
+Step 2: Test the Random Prime Number Endpoint (number role)
+
+1. Get a token for a user with the "number" role
+   - Make a POST request to http://localhost:8080/api/users/authenticate
+   - Body: {"Username": "Piotrek", "Password": "Piotrek"}
+   - Copy the token from the response
+
+2. Access the random prime endpoint
+   - Make a GET request to http://localhost:8080/api/numbers/random-prime
+   - Add header: Authorization: Bearer your-token
+   - You should receive a HTTP 200 OK with a random prime number between 2-13
+
+3. Test with a user without the "number" role
+   - Get a token for "Ania" (who doesn't have the "number" role)
+   - Try to access http://localhost:8080/api/numbers/random-prime
+   - You should receive a HTTP 403 Forbidden response
+
+4. Test with a user with admin role but no number role
+   - Get a token for "Andrzej" (who has "admin" but not "number" role)
+   - Try to access http://localhost:8080/api/numbers/random-prime
+   - You should receive a HTTP 403 Forbidden response
+   
+This demonstrates that role-based authorization is working properly for both endpoints.
+
+
+forms
+# Navigate to the solution directory
+cd d:\code\university\6\integracja_systemow\lab8
+
+# Create a new Windows Forms project
+dotnet new winforms -n ApiClient
+
+# Add the new project to the existing solution
+dotnet sln add ApiClient/ApiClient.csproj
+
+# Navigate to the ApiClient project directory
+cd ApiClient
+
+# Add the necessary NuGet packages
+dotnet add package Newtonsoft.Json
+dotnet add package System.Net.Http.
+
+# Create Models folder
+mkdir Models
+
+# Create model files (you'll need to add content to these files as shown in your existing files)
+New-Item -Path "Models\AuthRequest.cs" -ItemType File
+New-Item -Path "Models\AuthResponse.cs" -ItemType File
+New-Item -Path "Models\User.cs" -ItemType File
+
+# Open the project in VS Code
+code .
+
+# Create .vscode folder if it doesn't exist
+mkdir -p .vscode
+
+# Create tasks.json file
+New-Item -Path ".vscode\tasks.json" -ItemType File
+
+# Build the application
+dotnet build
+
+# Run the application
+dotnet run
+
+# Add Windows Forms references if needed
+dotnet add package System.Windows.Forms

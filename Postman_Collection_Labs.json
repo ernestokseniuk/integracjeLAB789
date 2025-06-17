@@ -1,0 +1,640 @@
+{
+	"info": {
+		"_postman_id": "1a2b3c4d-5e6f-7890-abcd-ef1234567890",
+		"name": "Integracje - Labs Collection",
+		"description": "Kompletna kolekcja zapytań dla projektów Lab 7, Lab 8 i Lab 9",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "noauth"
+	},
+	"event": [],
+	"variable": [
+		{
+			"key": "lab7_base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "lab8_base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "lab9_base_url",
+			"value": "http://localhost:8081",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "LAB 7 - REST API World Database",
+			"item": [
+				{
+					"name": "Get All Countries",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{lab7_base_url}}/api/read_countries.php",
+							"host": [
+								"{{lab7_base_url}}"
+							],
+							"path": [
+								"api",
+								"read_countries.php"
+							]
+						},
+						"description": "Pobiera listę wszystkich krajów z bazy danych World"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Cities",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{lab7_base_url}}/api/read_cities.php",
+							"host": [
+								"{{lab7_base_url}}"
+							],
+							"path": [
+								"api",
+								"read_cities.php"
+							]
+						},
+						"description": "Pobiera listę wszystkich miast z bazy danych World"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Country",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{lab7_base_url}}/api/read_single_country.php?id=POL",
+							"host": [
+								"{{lab7_base_url}}"
+							],
+							"path": [
+								"api",
+								"read_single_country.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "POL",
+									"description": "Kod kraju (np. POL, USA, GER)"
+								}
+							]
+						},
+						"description": "Pobiera szczegóły pojedynczego kraju na podstawie kodu"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Country",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"TST\",\n    \"name\": \"Test Country\",\n    \"continent\": \"Europe\",\n    \"region\": \"Northern Europe\",\n    \"surface_area\": 1000.50,\n    \"population\": 1000000,\n    \"life_expectancy\": 75.5,\n    \"gnp\": 50000.00,\n    \"local_name\": \"Test Country Local\",\n    \"government_form\": \"Republic\",\n    \"head_of_state\": \"Test President\",\n    \"code2\": \"TS\"\n}"
+						},
+						"url": {
+							"raw": "{{lab7_base_url}}/api/create_country.php",
+							"host": [
+								"{{lab7_base_url}}"
+							],
+							"path": [
+								"api",
+								"create_country.php"
+							]
+						},
+						"description": "Tworzy nowy kraj w bazie danych World"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cities by Country",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{lab7_base_url}}/api/read_cities.php?country_code=POL",
+							"host": [
+								"{{lab7_base_url}}"
+							],
+							"path": [
+								"api",
+								"read_cities.php"
+							],
+							"query": [
+								{
+									"key": "country_code",
+									"value": "POL",
+									"description": "Kod kraju do filtrowania miast"
+								}
+							]
+						},
+						"description": "Pobiera miasta dla określonego kraju"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpointy REST API dla bazy danych World (Lab 7)\nUruchom: docker-compose up -d w folderze lab7\nURL: http://localhost:8080"
+		},
+		{
+			"name": "LAB 8 - JWT Authentication API",
+			"item": [
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "Login - Andrzej (Admin)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    const response = pm.response.json();",
+											"    pm.collectionVariables.set('jwt_token', response.token);",
+											"    console.log('Token zapisany:', response.token.substring(0, 20) + '...');",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Username\": \"Andrzej\",\n    \"Password\": \"Andrzej\"\n}"
+								},
+								"url": {
+									"raw": "{{lab8_base_url}}/api/users/authenticate",
+									"host": [
+										"{{lab8_base_url}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"authenticate"
+									]
+								},
+								"description": "Logowanie użytkownika Andrzej (rola: admin, user)\nAutomatycznie zapisuje token JWT do zmiennej kolekcji"
+							},
+							"response": []
+						},
+						{
+							"name": "Login - Piotrek (Number)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    const response = pm.response.json();",
+											"    pm.collectionVariables.set('jwt_token', response.token);",
+											"    console.log('Token zapisany:', response.token.substring(0, 20) + '...');",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Username\": \"Piotrek\",\n    \"Password\": \"Piotrek\"\n}"
+								},
+								"url": {
+									"raw": "{{lab8_base_url}}/api/users/authenticate",
+									"host": [
+										"{{lab8_base_url}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"authenticate"
+									]
+								},
+								"description": "Logowanie użytkownika Piotrek (rola: number, user)\nAutomatycznie zapisuje token JWT do zmiennej kolekcji"
+							},
+							"response": []
+						},
+						{
+							"name": "Login - Ania (User Only)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    const response = pm.response.json();",
+											"    pm.collectionVariables.set('jwt_token', response.token);",
+											"    console.log('Token zapisany:', response.token.substring(0, 20) + '...');",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Username\": \"Ania\",\n    \"Password\": \"Ania\"\n}"
+								},
+								"url": {
+									"raw": "{{lab8_base_url}}/api/users/authenticate",
+									"host": [
+										"{{lab8_base_url}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"authenticate"
+									]
+								},
+								"description": "Logowanie użytkownika Ania (rola: user)\nAutomatycznie zapisuje token JWT do zmiennej kolekcji"
+							},
+							"response": []
+						}
+					],
+					"description": "Endpointy uwierzytelniania JWT"
+				},
+				{
+					"name": "Protected Endpoints",
+					"item": [
+						{
+							"name": "Get All Users (Admin Required)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{lab8_base_url}}/api/users",
+									"host": [
+										"{{lab8_base_url}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								},
+								"description": "Endpoint wymagający roli 'admin'\nUżytkownicy z dostępem: Andrzej\nUżytkownicy bez dostępu: Piotrek, Ania"
+							},
+							"response": []
+						},
+						{
+							"name": "Get User Count (User Required)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{lab8_base_url}}/api/users/count",
+									"host": [
+										"{{lab8_base_url}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"count"
+									]
+								},
+								"description": "Endpoint wymagający roli 'user'\nUżytkownicy z dostępem: Andrzej, Piotrek, Ania\n(wszyscy mają rolę 'user')"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Random Prime (Number Required)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{lab8_base_url}}/api/numbers/random-prime",
+									"host": [
+										"{{lab8_base_url}}"
+									],
+									"path": [
+										"api",
+										"numbers",
+										"random-prime"
+									]
+								},
+								"description": "Endpoint wymagający roli 'number'\nUżytkownicy z dostępem: Piotrek\nUżytkownicy bez dostępu: Andrzej, Ania\n\nZwraca losową liczbę pierwszą z zakresu 2-13"
+							},
+							"response": []
+						}
+					],
+					"description": "Chronione endpointy wymagające autoryzacji i odpowiednich ról"
+				},
+				{
+					"name": "Unauthorized Tests",
+					"item": [
+						{
+							"name": "Get Users Without Token (401)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{lab8_base_url}}/api/users",
+									"host": [
+										"{{lab8_base_url}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								},
+								"description": "Test dostępu bez tokenu - powinien zwrócić 401 Unauthorized"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Random Prime Without Token (401)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{lab8_base_url}}/api/numbers/random-prime",
+									"host": [
+										"{{lab8_base_url}}"
+									],
+									"path": [
+										"api",
+										"numbers",
+										"random-prime"
+									]
+								},
+								"description": "Test dostępu bez tokenu - powinien zwrócić 401 Unauthorized"
+							},
+							"response": []
+						}
+					],
+					"description": "Testy nieautoryzowanego dostępu"
+				}
+			],
+			"description": "JWT Authentication API (Lab 8)\nUruchom: dotnet run w folderze lab8/lab8\nURL: http://localhost:8080\n\nUżytkownicy testowi:\n- Andrzej/Andrzej (admin, user)\n- Piotrek/Piotrek (number, user) \n- Ania/Ania (user)\n\nInstrukcja testowania:\n1. Zaloguj się jednym z użytkowników\n2. Token zostanie automatycznie zapisany\n3. Testuj chronione endpointy z różnymi rolami"
+		},
+		{
+			"name": "LAB 9 - Transaction Isolation PHP",
+			"item": [
+				{
+					"name": "Main Application Pages",
+					"item": [
+						{
+							"name": "Main Menu",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{lab9_base_url}}/index1.php",
+									"host": [
+										"{{lab9_base_url}}"
+									],
+									"path": [
+										"index1.php"
+									]
+								},
+								"description": "Główna strona aplikacji z menu nawigacyjnym"
+							},
+							"response": []
+						},
+						{
+							"name": "READ COMMITTED Test",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{lab9_base_url}}/read-committed.php",
+									"host": [
+										"{{lab9_base_url}}"
+									],
+									"path": [
+										"read-committed.php"
+									]
+								},
+								"description": "Test poziomu izolacji READ COMMITTED\nDemo dirty read i non-repeatable read"
+							},
+							"response": []
+						},
+						{
+							"name": "REPEATABLE READ Test",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{lab9_base_url}}/repetable-read.php",
+									"host": [
+										"{{lab9_base_url}}"
+									],
+									"path": [
+										"repetable-read.php"
+									]
+								},
+								"description": "Test poziomu izolacji REPEATABLE READ\nDemo phantom read protection"
+							},
+							"response": []
+						}
+					],
+					"description": "Główne strony aplikacji demonstrującej poziomy izolacji transakcji"
+				},
+				{
+					"name": "Database Operations",
+					"item": [
+						{
+							"name": "Select ADAM Actors",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{lab9_base_url}}/select-adam.php",
+									"host": [
+										"{{lab9_base_url}}"
+									],
+									"path": [
+										"select-adam.php"
+									]
+								},
+								"description": "Wyświetla wszystkich aktorów o imieniu ADAM\nUżywane do sprawdzenia stanu bazy przed/po operacjach"
+							},
+							"response": []
+						},
+						{
+							"name": "Update ADAM to CHRIS",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{lab9_base_url}}/update-adam.php",
+									"host": [
+										"{{lab9_base_url}}"
+									],
+									"path": [
+										"update-adam.php"
+									]
+								},
+								"description": "Zmienia imię wszystkich aktorów z ADAM na CHRIS\nUżywane w testach izolacji transakcji"
+							},
+							"response": []
+						},
+						{
+							"name": "Update CHRIS to ADAM",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{lab9_base_url}}/update-chris.php",
+									"host": [
+										"{{lab9_base_url}}"
+									],
+									"path": [
+										"update-chris.php"
+									]
+								},
+								"description": "Zmienia imię wszystkich aktorów z CHRIS na ADAM\nPrzywraca stan początkowy bazy danych"
+							},
+							"response": []
+						}
+					],
+					"description": "Operacje na bazie danych Sakila do testowania poziomów izolacji"
+				},
+				{
+					"name": "Manual Testing Scenarios",
+					"item": [
+						{
+							"name": "Scenario 1: READ COMMITTED Demo",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{lab9_base_url}}/read-committed.php",
+									"host": [
+										"{{lab9_base_url}}"
+									],
+									"path": [
+										"read-committed.php"
+									]
+								},
+								"description": "INSTRUKCJA TESTOWANIA READ COMMITTED:\n\n1. Otwórz ten endpoint w przeglądarce\n2. Strona wykona pierwsze zapytanie i będzie czekać 20 sekund\n3. W tym czasie otwórz nową kartę i wykonaj: update-adam.php\n4. Sprawdź wynik select-adam.php\n5. Wróć do pierwszej karty i zobacz różnicę w wynikach\n\nOczekiwany rezultat: Drugie zapytanie pokaże zaktualizowane dane (dirty read)"
+							},
+							"response": []
+						},
+						{
+							"name": "Scenario 2: REPEATABLE READ Demo",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{lab9_base_url}}/repetable-read.php",
+									"host": [
+										"{{lab9_base_url}}"
+									],
+									"path": [
+										"repetable-read.php"
+									]
+								},
+								"description": "INSTRUKCJA TESTOWANIA REPEATABLE READ:\n\n1. Otwórz ten endpoint w przeglądarce\n2. Strona wykona pierwsze zapytanie i będzie czekać 20 sekund\n3. W tym czasie otwórz nową kartę i wykonaj: update-adam.php\n4. Sprawdź wynik select-adam.php\n5. Wróć do pierwszej karty i zobacz wyniki\n\nOczekiwany rezultat: Drugie zapytanie pokaże te same dane (ochrona przed non-repeatable read)"
+							},
+							"response": []
+						}
+					],
+					"description": "Scenariusze testowe do manualnego przeprowadzenia demonstracji"
+				}
+			],
+			"description": "Transaction Isolation Levels Demo (Lab 9)\nUruchom: docker-compose up -d w folderze lab9\nURL: http://localhost:8081\n\nBaza danych: MySQL 8.0 z bazą Sakila\nUżytkownicy: sakila1/pass, sakila2/pass\n\nInstrukcja testowania:\n1. Uruchom aplikację Docker\n2. Otwórz główne menu: http://localhost:8081/index1.php\n3. Wykonaj testy izolacji według instrukcji w scenariuszach\n4. Używaj multiple tabs w przeglądarce dla symulacji concurrent transactions"
+		}
+	]
+}

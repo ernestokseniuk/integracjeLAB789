@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - World Database</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        .header {
+            text-align: center;
+            color: #333;
+            border-bottom: 2px solid #28a745;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .method {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .get { background: #28a745; color: white; }
+        .post { background: #007bff; color: white; }
+        .put { background: #ffc107; color: black; }
+        .delete { background: #dc3545; color: white; }
+        .url {
+            font-family: 'Courier New', monospace;
+            background: #e9ecef;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .params {
+            margin: 15px 0;
+        }
+        .param {
+            background: white;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+        .param-name {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .param-type {
+            color: #28a745;
+            font-size: 12px;
+        }
+        .param-required {
+            color: #dc3545;
+            font-size: 12px;
+        }
+        .response {
+            background: #e8f5e8;
+            border: 1px solid #c3e6c3;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .nav-links {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .nav-links a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 10px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .nav-links a:hover {
+            background: #0056b3;
+        }
+        .try-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #17a2b8;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .try-button:hover {
+            background: #138496;
+        }
+        h2 {
+            color: #28a745;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #007bff;
+        }
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .toc li {
+            margin: 5px 0;
+        }
+        .toc a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 World Database REST API</h1>
+            <p>Kompletna dokumentacja endpointów REST API</p>
+        </div>
+
+        <div class="nav-links">
+            <a href="index.php">🏠 Główna</a>
+            <a href="countries.html">🌍 Kraje</a>
+            <a href="cities.html">🏙️ Miasta</a>
+        </div>
+
+        <div class="toc">
+            <h3>📋 Spis treści</h3>
+            <ul>
+                <li><a href="#countries">Kraje (Countries)</a></li>
+                <li><a href="#cities">Miasta (Cities)</a></li>
+                <li><a href="#examples">Przykłady użycia</a></li>
+                <li><a href="#errors">Kody błędów</a></li>
+            </ul>
+        </div>
+
+        <h2 id="countries">🌍 Kraje (Countries)</h2>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> Pobierz wszystkie kraje</h3>
+            <div class="url">/api/read_countries.php</div>
+            <p>Zwraca listę wszystkich krajów z bazy danych.</p>
+            
+            <div class="response">
+                <strong>Przykładowa odpowiedź:</strong>
+                <div class="code-block">{
+  "records": [
+    {
+      "code": "POL",
+      "name": "Poland",
+      "continent": "Europe",
+      "region": "Eastern Europe",
+      "surface_area": "312685.00",
+      "indep_year": "1918",
+      "population": "38653600",
+      "life_expectancy": "73.2",
+      "gnp": "151697.00",
+      "gnp_old": "135636.00",
+      "local_name": "Polska",
+      "government_form": "Republic",
+      "head_of_state": "Aleksander Kwasniewski",
+      "capital": "270",
+      "code2": "PL"
+    }
+  ]
+}</div>
+            </div>
+            <a href="/api/read_countries.php" class="try-button" target="_blank">🧪 Wypróbuj</a>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> Pobierz pojedynczy kraj</h3>
+            <div class="url">/api/read_single_country.php?code={CODE}</div>
+            <p>Zwraca szczegóły konkretnego kraju na podstawie jego kodu.</p>
+            
+            <div class="params">
+                <h4>Parametry:</h4>
+                <div class="param">
+                    <span class="param-name">code</span> 
+                    <span class="param-type">(string)</span> 
+                    <span class="param-required">WYMAGANY</span>
+                    <br>3-znakowy kod kraju (np. POL, USA, GER)
+                </div>
+            </div>
+
+            <div class="response">
+                <strong>Przykładowa odpowiedź:</strong>
+                <div class="code-block">{
+  "code": "POL",
+  "name": "Poland",
+  "continent": "Europe",
+  "region": "Eastern Europe",
+  "surface_area": "312685.00",
+  "indep_year": "1918",
+  "population": "38653600",
+  "life_expectancy": "73.2",
+  "gnp": "151697.00",
+  "local_name": "Polska",
+  "government_form": "Republic",
+  "head_of_state": "Aleksander Kwasniewski",
+  "capital": "270",
+  "code2": "PL"
+}</div>
+            </div>
+            <a href="/api/read_single_country.php?code=POL" class="try-button" target="_blank">🧪 Wypróbuj (Polska)</a>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method post">POST</span> Dodaj nowy kraj</h3>
+            <div class="url">/api/create_country.php</div>
+            <p>Tworzy nowy kraj w bazie danych.</p>
+            
+            <div class="params">
+                <h4>Parametry (JSON):</h4>
+                <div class="param">
+                    <span class="param-name">code</span> 
+                    <span class="param-type">(string)</span> 
+                    <span class="param-required">WYMAGANY</span>
+                    <br>3-znakowy kod kraju
+                </div>
+                <div class="param">
+                    <span class="param-name">name</span> 
+                    <span class="param-type">(string)</span> 
+                    <span class="param-required">WYMAGANY</span>
+                    <br>Nazwa kraju
+                </div>
+                <div class="param">
+                    <span class="param-name">continent</span> 
+                    <span class="param-type">(string)</span> 
+                    <span class="param-required">WYMAGANY</span>
+                    <br>Kontynent (Asia, Europe, North America, South America, Africa, Oceania, Antarctica)
+                </div>
+                <div class="param">
+                    <span class="param-name">region</span> 
+                    <span class="param-type">(string)</span> 
+                    <span class="param-required">WYMAGANY</span>
+                    <br>Region
+                </div>
+                <div class="param">
+                    <span class="param-name">surface_area</span> 
+                    <span class="param-type">(number)</span> 
+                    <span class="param-required">WYMAGANY</span>
+                    <br>Powierzchnia w km²
+                </div>
+                <div class="param">
+                    <span class="param-name">population</span> 
+                    <span class="param-type">(number)</span> 
+                    <span class="param-required">WYMAGANY</span>
+                    <br>Liczba ludności
+                </div>
+                <div class="param">
+                    <span class="param-name">local_name</span> 
+                    <span class="param-type">(string)</span> 
+                    <span class="param-required">WYMAGANY</span>
+                    <br>Lokalna nazwa kraju
+                </div>
+                <div class="param">
+                    <span class="param-name">government_form</span> 
+                    <span class="param-type">(string)</span> 
+                    <span class="param-required">WYMAGANY</span>
+                    <br>Forma rządu
+                </div>
+                <div class="param">
+                    <span class="param-name">code2</span> 
+                    <span class="param-type">(string)</span> 
+                    <span class="param-required">WYMAGANY</span>
+                    <br>2-znakowy kod kraju
+                </div>
+                <div class="param">
+                    <span class="param-name">indep_year</span> 
+                    <span class="param-type">(number)</span> 
+                    <span style="color: #6c757d;">OPCJONALNY</span>
+                    <br>Rok uzyskania niepodległości
+                </div>
+                <div class="param">
+                    <span class="param-name">life_expectancy</span> 
+                    <span class="param-type">(number)</span> 
+                    <span style="color: #6c757d;">OPCJONALNY</span>
+                    <br>Średnia długość życia
+                </div>
+                <div class="param">
+                    <span class="param-name">gnp</span> 
+                    <span class="param-type">(number)</span> 
+                    <span style="color: #6c757d;">OPCJONALNY</span>
+                    <br>PKB
+                </div>
+                <div class="param">
+                    <span class="param-name">head_of_state</span> 
+                    <span class="param-type">(string)</span> 
+                    <span style="color: #6c757d;">OPCJONALNY</span>
+                    <br>Głowa państwa
+                </div>
+            </div>
+
+            <div class="response">
+                <strong>Przykład zapytania:</strong>
+                <div class="code-block">curl -X POST http://localhost:8000/api/create_country.php \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "TST",
+    "name": "Test Country",
+    "continent": "Europe",
+    "region": "Test Region",
+    "surface_area": 1000.00,
+    "population": 1000000,
+    "local_name": "Test Country",
+    "government_form": "Republic",
+    "code2": "TS"
+  }'</div>
+            </div>
+        </div>
+
+        <h2 id="cities">🏙️ Miasta (Cities)</h2>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> Pobierz wszystkie miasta</h3>
+            <div class="url">/api/read_cities.php</div>
+            <p>Zwraca listę wszystkich miast z bazy danych.</p>
+            
+            <div class="response">
+                <strong>Przykładowa odpowiedź:</strong>
+                <div class="code-block">{
+  "records": [
+    {
+      "id": "270",
+      "name": "Warszawa",
+      "country_code": "POL",
+      "district": "Mazowieckie",
+      "population": "1615369"
+    }
+  ]
+}</div>
+            </div>
+            <a href="/api/read_cities.php" class="try-button" target="_blank">🧪 Wypróbuj</a>
+        </div>
+
+        <div class="endpoint">
+            <h3><span class="method get">GET</span> Pobierz miasta w kraju</h3>
+            <div class="url">/api/read_cities.php?country={CODE}</div>
+            <p>Zwraca listę miast z konkretnego kraju.</p>
+            
+            <div class="params">
+                <h4>Parametry:</h4>
+                <div class="param">
+                    <span class="param-name">country</span> 
+                    <span class="param-type">(string)</span> 
+                    <span class="param-required">WYMAGANY</span>
+                    <br>3-znakowy kod kraju (np. POL, USA, GER)
+                </div>
+            </div>
+
+            <a href="/api/read_cities.php?country=POL" class="try-button" target="_blank">🧪 Wypróbuj (Polska)</a>
+        </div>
+
+        <h2 id="examples">💡 Przykłady użycia</h2>
+
+        <div class="endpoint">
+            <h3>JavaScript (Fetch API)</h3>
+            <div class="code-block">// Pobierz wszystkie kraje
+fetch('/api/read_countries.php')
+  .then(response => response.json())
+  .then(data => {
+    console.log('Kraje:', data.records);
+  });
+
+// Pobierz konkretny kraj
+fetch('/api/read_single_country.php?code=POL')
+  .then(response => response.json())
+  .then(country => {
+    console.log('Polska:', country);
+  });
+
+// Dodaj nowy kraj
+fetch('/api/create_country.php', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    code: 'TST',
+    name: 'Test Country',
+    continent: 'Europe',
+    region: 'Test Region',
+    surface_area: 1000,
+    population: 1000000,
+    local_name: 'Test Country',
+    government_form: 'Republic',
+    code2: 'TS'
+  })
+})
+.then(response => response.json())
+.then(result => {
+  console.log('Wynik:', result);
+});</div>
+        </div>
+
+        <div class="endpoint">
+            <h3>PHP (cURL)</h3>
+            <div class="code-block">&lt;?php
+// Pobierz wszystkie kraje
+$response = file_get_contents('http://localhost:8000/api/read_countries.php');
+$countries = json_decode($response, true);
+
+// Pobierz konkretny kraj
+$country_response = file_get_contents('http://localhost:8000/api/read_single_country.php?code=POL');
+$poland = json_decode($country_response, true);
+
+// Dodaj nowy kraj
+$new_country = [
+    'code' => 'TST',
+    'name' => 'Test Country',
+    'continent' => 'Europe',
+    'region' => 'Test Region',
+    'surface_area' => 1000,
+    'population' => 1000000,
+    'local_name' => 'Test Country',
+    'government_form' => 'Republic',
+    'code2' => 'TS'
+];
+
+$ch = curl_init('http://localhost:8000/api/create_country.php');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($new_country));
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+
+$result = curl_exec($ch);
+curl_close($ch);
+?&gt;</div>
+        </div>
+
+        <h2 id="errors">⚠️ Kody błędów</h2>
+
+        <div class="endpoint">
+            <h3>Standardowe kody odpowiedzi HTTP</h3>
+            <div class="params">
+                <div class="param">
+                    <span class="param-name">200 OK</span>
+                    <br>Zapytanie wykonane pomyślnie
+                </div>
+                <div class="param">
+                    <span class="param-name">201 Created</span>
+                    <br>Zasób został utworzony pomyślnie
+                </div>
+                <div class="param">
+                    <span class="param-name">400 Bad Request</span>
+                    <br>Nieprawidłowe dane wejściowe
+                </div>
+                <div class="param">
+                    <span class="param-name">404 Not Found</span>
+                    <br>Zasób nie został znaleziony
+                </div>
+                <div class="param">
+                    <span class="param-name">503 Service Unavailable</span>
+                    <br>Błąd serwera lub bazy danych
+                </div>
+            </div>
+
+            <div class="response">
+                <strong>Przykład odpowiedzi błędu:</strong>
+                <div class="code-block">{
+  "message": "Country does not exist."
+}</div>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <a href="index.php">🏠 Powrót do głównej</a>
+            <a href="countries.html">🌍 Interfejs krajów</a>
+            <a href="cities.html">🏙️ Interfejs miast</a>
+        </div>
+
+        <hr>
+        <p style="text-align: center; color: #666; margin-top: 30px;">
+            <small>Lab 7 - Docker REST API Documentation | Wygenerowano: <?php echo date('Y-m-d H:i:s'); ?></small>
+        </p>
+    </div>
+</body>
+</html>

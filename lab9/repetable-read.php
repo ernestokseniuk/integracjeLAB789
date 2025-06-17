@@ -1,10 +1,14 @@
 <?php
 // Przykład poziomu izolacji REPEATABLE READ
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 $servername = "db";  // Docker service name
 $username = "sakila1";
 $password = "pass";
 $database = "sakila";
 
+echo "<h3>Łączenie z bazą danych...</h3>";
 $conn = new mysqli($servername, $username, $password, $database);
 
 if ($conn->connect_error) {
@@ -12,6 +16,12 @@ if ($conn->connect_error) {
 }
 
 echo "Database connected successfully, username " . $username . "<br><br>";
+
+// Sprawdzenie czy tabela actor istnieje
+$check_table = $conn->query("SHOW TABLES LIKE 'actor'");
+if ($check_table->num_rows == 0) {
+    die("Tabela 'actor' nie istnieje w bazie danych!<br>");
+}
 
 // Nie zmieniaj domyślnego poziomu izolacji REPEATABLE READ
 // Rozpocznij transakcję

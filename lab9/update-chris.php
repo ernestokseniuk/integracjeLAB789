@@ -1,10 +1,14 @@
 <?php
 // Przykład aktualizacji tabeli actor - wszystkie imiona CHRIS będą zmienione na ADAM
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 $servername = "db";  // Docker service name
 $username = "sakila2";
 $password = "pass";
 $database = "sakila";
 
+echo "<h3>Łączenie z bazą danych...</h3>";
 $conn = new mysqli($servername, $username, $password, $database);
 
 if ($conn->connect_error) {

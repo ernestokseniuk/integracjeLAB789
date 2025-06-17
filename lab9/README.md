@@ -27,6 +27,7 @@ This will:
 
 3. Access the application:
 - Main menu: http://localhost:8081/index1.php
+- Diagnostics: http://localhost:8081/test-connection.php
 - READ COMMITTED test: http://localhost:8081/read-committed.php
 - REPEATABLE READ test: http://localhost:8081/repetable-read.php
 

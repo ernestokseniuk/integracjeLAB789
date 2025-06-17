@@ -79,19 +79,22 @@
         
         <div class="info">
             <strong>Cel laboratorium:</strong> Przedstawienie podstawowych problemów wynikających z wielowątkowego dostępu do współdzielonych zasobów oraz testowanie poziomów izolacji w bazach danych.
+        </div>        <div class="section">
+            <h3>1. Diagnostyka</h3>
+            <ul class="link-list">
+                <li><a href="test-connection.php" target="_blank">🔧 Test połączenia z bazą danych</a></li>
+            </ul>
         </div>
 
         <div class="section">
-            <h3>1. Operacje na danych</h3>
+            <h3>2. Operacje na danych</h3>
             <ul class="link-list">
                 <li><a href="select-adam.php" target="_blank">Sprawdź aktualny stan aktorów ADAM</a></li>
                 <li><a href="update-chris.php" target="_blank">Aktualizuj CHRIS na ADAM</a></li>
                 <li><a href="update-adam.php" target="_blank">Aktualizuj ADAM na CHRIS</a></li>
             </ul>
-        </div>
-
-        <div class="section">
-            <h3>2. Testy poziomów izolacji</h3>
+        </div>        <div class="section">
+            <h3>3. Testy poziomów izolacji</h3>
             <div class="warning">
                 <strong>Uwaga!</strong> Wykonuj testy w określonej kolejności zgodnie z instrukcją laboratorium.
             </div>
@@ -99,10 +102,8 @@
                 <li><a href="repetable-read.php" target="_blank">Test REPEATABLE READ</a></li>
                 <li><a href="read-committed.php" target="_blank">Test READ COMMITTED</a></li>
             </ul>
-        </div>
-
-        <div class="section">
-            <h3>3. Zadania zaawansowane</h3>
+        </div>        <div class="section">
+            <h3>4. Zadania zaawansowane</h3>
             <ul class="link-list">
                 <li><a href="dirty-read-test.php" target="_blank">Test Dirty Read</a></li>
                 <li><a href="phantom-read-test.php" target="_blank">Test Phantom Read</a></li>
